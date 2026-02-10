@@ -16,6 +16,7 @@ extern struct {
 int
 sys_setpriority(void)
 {
+  //initialize and validate arguments
   int pid, prio;
   if(argint(0, &pid) < 0 || argint(1, &prio) < 0)
     return -1;
@@ -23,8 +24,10 @@ sys_setpriority(void)
   if(prio < 0 || prio > 2)
     return -1;
 
+  //acquire and lock ptable
   acquire(&ptable.lock);
 
+  //check through table for process and update priority if found
   struct proc *p;
   int found = 0;
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
@@ -35,6 +38,7 @@ sys_setpriority(void)
     }
   }
 
+  //release ptable and return
   release(&ptable.lock);
   if (found == 1)
     return 0;

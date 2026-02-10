@@ -88,7 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p->priority = 1;
+  p->priority = 1; //sets priority to 1 as default
 
   release(&ptable.lock);
 
@@ -200,7 +200,7 @@ fork(void)
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
-  np->priority = curproc->priority;
+  np->priority = curproc->priority; //updates priority to match parent
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;
